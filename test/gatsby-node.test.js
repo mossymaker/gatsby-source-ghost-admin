@@ -1,11 +1,11 @@
 const testUtils = require('./utils');
-const ContentAPI = require('../content-api');
+const AdminAPI = require('../admin-api');
 const gatsbyNode = require('../gatsby-node');
 const ghostSchema = require('../ghost-schema');
 
 describe('Basic Functionality', function () {
     beforeEach(() => {
-        sinon.replace(ContentAPI, 'configure', testUtils.MockContentAPI);
+        sinon.replace(AdminAPI, 'configure', testUtils.MockAdminAPI);
     });
 
     afterEach(() => {

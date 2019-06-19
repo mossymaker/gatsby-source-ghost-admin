@@ -1,6 +1,6 @@
 /**
- * A fake version of the Content API
- * @TODO: consider extending this and moving it to the Content API lib
+ * A fake version of the Admin API
+ * @TODO: consider extending this and moving it to the Admin API lib
  */
 
 const browsePosts = sinon.stub().resolves([
@@ -34,7 +34,7 @@ const browseSettings = sinon.stub().resolves(
         codeinjection_foot: '<style><style>'
     }
 );
-const MockContentAPI = function () {
+const MockAdminAPI = function () {
     return {
         posts: {browse: browsePosts},
         pages: {browse: browsePages},
@@ -44,4 +44,4 @@ const MockContentAPI = function () {
     };
 };
 
-module.exports = MockContentAPI;
+module.exports = MockAdminAPI;

@@ -1,9 +1,10 @@
 {
-  "name": "gatsby-source-ghost",
-  "version": "3.4.2",
-  "description": "Gatsby source plugin for building websites using the Ghost API as a data source.",
-  "repository": "git@github.com:TryGhost/gatsby-source-ghost.git",
-  "author": "Ghost Foundation",
+  "name": "gatsby-source-ghost-admin",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Gatsby source plugin for building websites using the Ghost Admin API as a data source.",
+  "repository": "git@github.com:mossymaker/gatsby-source-ghost-admin.git",
+  "author": "Patrick Walsh",
   "license": "MIT",
   "keywords": [
     "gatsby",
@@ -13,7 +14,7 @@
   ],
   "scripts": {
     "lint": "eslint . --ext .js --cache",
-    "posttest": "yarn lint",
+    "pretest": "yarn lint",
     "test": "NODE_ENV=testing mocha -- $(find test -name '*.test.js')",
     "preship": "yarn test",
     "ship": "STATUS=$(git status --porcelain); echo $STATUS; if [ -z \"$STATUS\" ]; then yarn publish && git push --follow-tags; fi"
@@ -28,7 +29,7 @@
     "sinon": "7.3.2"
   },
   "dependencies": {
-    "@tryghost/content-api": "1.2.4",
+    "@tryghost/admin-api": "^0.5.1",
     "bluebird": "3.5.5",
     "cheerio": "0.22.0",
     "gatsby-node-helpers": "^0.3.0",

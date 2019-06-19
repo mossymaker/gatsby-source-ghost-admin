@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
-const ContentAPI = require('./content-api');
-const {PostNode, PageNode, TagNode, AuthorNode, SettingsNode, fakeNodes} = require('./ghost-nodes');
+const AdminAPI = require('./admin-api');
+const {PostNode, PageNode, TagNode, UserNode, fakeNodes} = require('./ghost-nodes');
 const _ = require(`lodash`);
 const cheerio = require(`cheerio`);
 
@@ -60,12 +60,12 @@ const transformCodeinjection = (posts) => {
 const createLiveGhostNodes = ({actions}, configOptions) => {
     const {createNode} = actions;
 
-    const api = ContentAPI.configure(configOptions);
+    const api = AdminAPI.configure(configOptions);
 
     const postAndPageFetchOptions = {
         limit: 'all',
         include: 'tags,authors',
-        formats: 'html,plaintext'
+        formats: 'html,mobiledoc,plaintext'
     };
 
     const fetchPosts = api.posts.browse(postAndPageFetchOptions).then((posts) => {
@@ -89,36 +89,14 @@ const createLiveGhostNodes = ({actions}, configOptions) => {
         });
     });
 
-    const fetchAuthors = api.authors.browse(tagAndAuthorFetchOptions).then((authors) => {
-        authors.forEach((author) => {
-            author.postCount = author.count.posts;
-            createNode(AuthorNode(author));
+    const fetchUsers = api.users.browse(tagAndAuthorFetchOptions).then((users) => {
+        users.forEach((user) => {
+            user.postCount = user.count.posts;
+            createNode(UserNode(user));
         });
     });
 
-    const fetchSettings = api.settings.browse().then((setting) => {
-        const codeinjectionHead = setting.codeinjection_head || setting.ghost_head;
-        const codeinjectionFoot = setting.codeinjection_foot || setting.ghost_foot;
-        const allCodeinjections = codeinjectionHead ? codeinjectionHead.concat(codeinjectionFoot) :
-            codeinjectionFoot ? codeinjectionFoot : null;
-
-        if (allCodeinjections) {
-            const parsedCodeinjections = parseCodeinjection(allCodeinjections);
-
-            if (_.isEmpty(setting.codeinjection_styles)) {
-                setting.codeinjection_styles = parsedCodeinjections.styles;
-            } else {
-                setting.codeinjection_styles += parsedCodeinjections.styles;
-            }
-        }
-
-        setting.codeinjection_styles = _.isNil(setting.codeinjection_styles) ? '' : setting.codeinjection_styles;
-        // The settings object doesn't have an id, prevent Gatsby from getting 'undefined'
-        setting.id = 1;
-        createNode(SettingsNode(setting));
-    });
-
-    return Promise.all([fetchPosts, fetchPages, fetchTags, fetchAuthors, fetchSettings]);
+    return Promise.all([fetchPosts, fetchPages, fetchTags, fetchUsers]);
 };
 
 /**
